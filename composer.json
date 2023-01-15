@@ -1,0 +1,19 @@
+{
+  "name": "morozov/php-tek-2023",
+  "require": {
+    "ext-mysqli": "*",
+    "ext-pdo": "*",
+    "doctrine/dbal": "^3.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Morozov\\PhpTek\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Sergei Morozov",
+      "email": "morozov@tut.by"
+    }
+  ]
+}
