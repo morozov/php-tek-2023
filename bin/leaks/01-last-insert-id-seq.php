@@ -1,9 +1,8 @@
 <?php
 
-use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Table;
 
-require __DIR__ . '/dbal.php';
+require __DIR__ . '/../dbal.php';
 
 function setUp() {
     $table = new Table('ai');

@@ -3,11 +3,13 @@
   "require": {
     "ext-mysqli": "*",
     "ext-pdo": "*",
-    "doctrine/dbal": "^3.5"
+    "doctrine/dbal": "^3.5",
+    "doctrine/orm": "^2.14",
+    "symfony/cache": "^6.2"
   },
   "autoload": {
     "psr-4": {
-      "Morozov\\PhpTek\\": "src/"
+      "": "src/"
     }
   },
   "authors": [

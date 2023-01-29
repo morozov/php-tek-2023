@@ -9,7 +9,7 @@ function connect_to_mysqli() {
         'driver' => 'mysqli',
         'host'   => '127.0.0.1',
         'user'   => 'root',
-        'dbname' => 'mysql',
+        'dbname' => 'php-tek',
     ]);
 }
 
@@ -37,7 +37,7 @@ function connect_to_pdo_mysql() {
         'driver' => 'pdo_mysql',
         'host'   => '127.0.0.1',
         'user'   => 'root',
-        'dbname' => 'mysql',
+        'dbname' => 'php-tek',
     ]);
 }
 
@@ -77,5 +77,5 @@ function connect_to_pdo_sqlsrv() {
 }
 
 function connect() {
-    return connect_to_pdo_oci();
+    return connect_to_mysqli();
 }
