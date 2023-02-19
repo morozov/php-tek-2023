@@ -1,9 +1,11 @@
 <?php
 
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 
 require __DIR__ . '/../dbal.php';
+require __DIR__ . '/create-input-stream.php';
 
 // we are using the ORM here in order to hide the differences between the type of BLOBs
 // offered by the different drivers
@@ -15,24 +17,43 @@ $config = ORMSetup::createAttributeMetadataConfiguration(
 $conn = connect();
 
 $conn->executeStatement('DROP TABLE IF EXISTS messages');
-//$conn->executeStatement('DROP SEQUENCE IF EXISTS messages_id_seq');
+
+if ($conn->getDatabasePlatform() instanceof PostgreSQLPlatform) {
+    $conn->executeStatement('DROP SEQUENCE IF EXISTS messages_id_seq');
+}
+
 $em = new Doctrine\ORM\EntityManager($conn, $config);
 
 $schemaTool = new SchemaTool($em);
 $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
 
-$msg1 = new Message('ABC');
-$em->persist($msg1);
+$attachment = create_input_stream();
+printf('Stream created.' . PHP_EOL);
+printf('Peak memory usage: %s bytes.' . PHP_EOL . PHP_EOL, number_format(memory_get_peak_usage()));
 
-$msg2 = new Message('XYZ');
-$em->persist($msg2);
+$msg = new Message($attachment);
+$em->persist($msg);
+
+printf('Entity persisted.' . PHP_EOL);
+printf('Peak memory usage: %s bytes' . PHP_EOL . PHP_EOL, number_format(memory_get_peak_usage()));
 
 $em->flush();
+
+printf('Entity manager flushed.' . PHP_EOL);
+printf('Peak memory usage: %s bytes' . PHP_EOL . PHP_EOL, number_format(memory_get_peak_usage()));
+
+fclose($attachment);
 
 // make sure we fetch the entities from the database
 $em->clear();
 
 $messages = $em->createQuery('SELECT m FROM Message m')->getResult();
 foreach ($messages as $msg) {
-    printf('#%d: %s' . PHP_EOL, $msg->id, stream_get_contents($msg->attachment));
+    $output = fopen('/dev/null', 'w');
+    $copied = stream_copy_to_stream($msg->attachment, $output);
+    fclose($output);
+
+    printf('#%d: Copied %s bytes' . PHP_EOL, $msg->id, number_format($copied));
 }
+
+printf('Peak memory usage: %s bytes' . PHP_EOL, number_format(memory_get_peak_usage()));
