@@ -8,7 +8,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Morozov\PhpTek2023\Message;
 
 require __DIR__ . '/../dbal.php';
-require __DIR__ . '/create-input-stream.php';
+require __DIR__ . '/blob-functions.php';
 
 // we are using the ORM here in order to hide the differences between the type of BLOBs
 // offered by the different drivers
@@ -32,18 +32,18 @@ $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
 
 $attachment = create_input_stream();
 printf('Stream created.' . PHP_EOL);
-printf('Peak memory usage: %s bytes.' . PHP_EOL . PHP_EOL, number_format(memory_get_peak_usage()));
+print_peak_memory_usage();
 
 $msg = new Message($attachment);
 $em->persist($msg);
 
 printf('Entity persisted.' . PHP_EOL);
-printf('Peak memory usage: %s bytes' . PHP_EOL . PHP_EOL, number_format(memory_get_peak_usage()));
+print_peak_memory_usage();
 
 $em->flush();
 
 printf('Entity manager flushed.' . PHP_EOL);
-printf('Peak memory usage: %s bytes' . PHP_EOL . PHP_EOL, number_format(memory_get_peak_usage()));
+print_peak_memory_usage();
 
 fclose($attachment);
 
@@ -52,11 +52,9 @@ $em->clear();
 
 $messages = $em->createQuery('SELECT m FROM Message m')->getResult();
 foreach ($messages as $msg) {
-    $output = fopen('/dev/null', 'w');
-    $copied = stream_copy_to_stream($msg->attachment, $output);
-    fclose($output);
+    $copied = copy_stream_to_dev_null($msg->attachment);
 
-    printf('#%d: Copied %s bytes' . PHP_EOL, $msg->id, number_format($copied));
+    printf('Copied %s.' . PHP_EOL, format_as_mebibytes($copied));
 }
 
-printf('Peak memory usage: %s bytes' . PHP_EOL, number_format(memory_get_peak_usage()));
+print_peak_memory_usage();

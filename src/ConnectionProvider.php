@@ -26,6 +26,11 @@ final class ConnectionProvider
             'password' => 'oracle',
             'dbname'   => 'XE',
         ],
+        'pgsql' => [
+            'host'     => '127.0.0.1',
+            'user'     => 'postgres',
+            'password' => 'Passw0rd',
+        ],
         'sqlite3' => [
             'path'   => __DIR__ . '/../db.sqlite',
         ],

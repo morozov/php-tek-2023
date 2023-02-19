@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2446ccf72fe6be410ee16a854abd4e06",
+    "content-hash": "ab7eeb7f15f33697b9f01a999c83a616",
     "packages": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -2494,7 +2494,9 @@
     "prefer-lowest": false,
     "platform": {
         "ext-mysqli": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-pgsql": "*",
+        "ext-sqlsrv": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
