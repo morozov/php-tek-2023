@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Morozov\PhpTek2023;
+namespace Morozov\PhpTek2023\Examples\E02BlobMemoryUsage;
 
 use Doctrine\ORM\Mapping as ORM;
 

@@ -14,10 +14,17 @@
     <file>bin</file>
     <file>src</file>
 
-    <rule ref="Doctrine"/>
+    <rule ref="Doctrine">
+        <exclude name="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException"/>
+    </rule>
 
     <!-- See https://github.com/squizlabs/PHP_CodeSniffer/pull/3686 -->
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-        <exclude-pattern>src/Message.php</exclude-pattern>
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
+
+    <!-- See https://github.com/php/php-src/issues/10672 -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing">
+        <exclude-pattern>src/Examples/E02BlobMemoryUsage/Driver/PgSqlDriver.php</exclude-pattern>
     </rule>
 </ruleset>

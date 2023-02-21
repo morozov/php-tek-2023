@@ -44,7 +44,7 @@ final class E01LastInsertId implements RunnableWithDriver
     }
 
     /** @throws Exception */
-    public function setUp(Connection $connection): void
+    private function setUp(Connection $connection): void
     {
         $table = new Table('ai');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);

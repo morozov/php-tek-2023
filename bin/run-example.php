@@ -18,7 +18,7 @@ $runner = new Runner();
 
 try {
     $runner->run($_SERVER['argv']);
-} catch (Throwable $e) {
+} catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;
     exit(1);
 }

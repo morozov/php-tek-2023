@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/../dbal.php';
 require __DIR__ . '/blob-functions.php';
 
@@ -18,9 +20,9 @@ $stmt = sqlsrv_prepare(
         [
             &$attachment,
             SQLSRV_PARAM_IN,
-            SQLSRV_PHPTYPE_STRING(SQLSRV_ENC_CHAR),
-        ]
-    ]
+            sqlsrv_phptype_string(SQLSRV_ENC_CHAR),
+        ],
+    ],
 );
 
 sqlsrv_execute($stmt);
@@ -36,7 +38,7 @@ if (sqlsrv_fetch($stmt) === false) {
     die('Could not fetch row.');
 }
 
-$attachment = sqlsrv_get_field($stmt, 0, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY));
+$attachment = sqlsrv_get_field($stmt, 0, sqlsrv_phptype_stream(SQLSRV_ENC_BINARY));
 
 $copied = copy_stream_to_dev_null($attachment);
 

@@ -1,6 +1,7 @@
 {
   "name": "morozov/php-tek-2023",
   "require": {
+    "php": "^8.2",
     "ext-mysqli": "*",
     "ext-pdo": "*",
     "ext-pgsql": "*",

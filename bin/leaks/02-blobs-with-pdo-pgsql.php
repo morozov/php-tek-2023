@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/../dbal.php';
 require __DIR__ . '/blob-functions.php';
 
