@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Doctrine\DBAL\Schema\Table;
 
 require __DIR__ . '/../dbal.php';
@@ -11,7 +13,7 @@ $table->addColumn('id', 'integer');
 $table->addColumn('metadata', 'json', ['default' => '(JSON_OBJECT())']);
 
 $conn = connect();
-$sm = $conn->createSchemaManager();
+$sm   = $conn->createSchemaManager();
 $sm->dropAndCreateTable($table);
 
 $conn->insert('events', ['id' => 1]);

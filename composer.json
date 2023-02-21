@@ -3,13 +3,14 @@
   "require": {
     "ext-mysqli": "*",
     "ext-pdo": "*",
+    "doctrine/coding-standard": "^11.1",
     "doctrine/dbal": "^3.6",
     "doctrine/orm": "^2.14",
     "symfony/cache": "^6.2"
   },
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "Morozov\\PhpTek2023\\": "src/"
     }
   },
   "authors": [
@@ -17,5 +18,11 @@
       "name": "Sergei Morozov",
       "email": "morozov@tut.by"
     }
-  ]
+  ],
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  }
 }

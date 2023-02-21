@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Doctrine\DBAL\Schema\Table;
 
 require __DIR__ . '/../dbal.php';
@@ -9,7 +11,7 @@ $table->addColumn('id', 'integer');
 $table->addColumn('ignore', 'boolean');
 
 $conn = connect();
-$sm = $conn->createSchemaManager();
+$sm   = $conn->createSchemaManager();
 $sm->dropAndCreateTable($table);
 
 $conn->insert('rules', ['id' => 1, 'ignore' => false]);

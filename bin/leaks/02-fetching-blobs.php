@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
+use Morozov\PhpTek2023\Message;
 
 require __DIR__ . '/../dbal.php';
 require __DIR__ . '/create-input-stream.php';

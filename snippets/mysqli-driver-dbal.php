@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
-function getMessageSubjects(Connection $conn, int $userId): array {
+function getMessageSubjects(Connection $conn, int $userId): array
+{
     $query = <<<'SQL'
     SELECT subject FROM messages WHERE user_id=?
     SQL;

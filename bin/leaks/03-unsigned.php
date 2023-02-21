@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Doctrine\DBAL\Schema\Table;
 
 require __DIR__ . '/../dbal.php';
@@ -8,7 +10,7 @@ $table = new Table('memory');
 $table->addColumn('address', 'smallint', ['unsigned' => true]);
 
 $conn = connect();
-$sm = $conn->createSchemaManager();
+$sm   = $conn->createSchemaManager();
 $sm->dropAndCreateTable($table);
 
 $conn->insert('memory', ['address' => 0x8000]);

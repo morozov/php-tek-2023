@@ -1,6 +1,9 @@
 <?php
 
-function create_input_stream() {
+declare(strict_types=1);
+
+function create_input_stream()
+{
     $fp = tmpfile();
 
     // Generate and write 20MB of data in 8KB chunks

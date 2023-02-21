@@ -1,6 +1,9 @@
 <?php
 
-function getMessageSubjects(mysqli $conn, int $userId): array {
+declare(strict_types=1);
+
+function getMessageSubjects(mysqli $conn, int $userId): array
+{
     $query = <<<'SQL'
     SELECT subject FROM messages WHERE user_id=?
     SQL;
@@ -15,12 +18,13 @@ function getMessageSubjects(mysqli $conn, int $userId): array {
     while ($stmt->fetch() === true) {
         $subjects[] = $subject;
     }
+
     return $subjects;
 }
 
 $conn = mysqli_connect('127.0.0.1', 'root', '', 'php-tek-2023');
 
-if (!$conn) {
+if (! $conn) {
     exit(1);
 }
 
