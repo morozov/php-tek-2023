@@ -4,38 +4,36 @@ declare(strict_types=1);
 
 namespace Morozov\PhpTek2023;
 
-use InvalidArgumentException;
+use Exception;
 
-use function class_exists;
 use function count;
-use function sprintf;
+use function printf;
+
+use const PHP_EOL;
 
 final class Runner
 {
-    /** @param list<string> $arguments */
-    public function run(array $arguments): void
+    /** @param list<Test> $tests */
+    public function run(array $tests): void
     {
-        $example = $arguments[1];
-        $class   = 'Morozov\\PhpTek2023\\Examples\\' . $example;
-
-        if (! class_exists($class)) {
-            throw new InvalidArgumentException(sprintf('Example "%s" not found', $example));
-        }
-
-        $runnable = new $class();
-
         $connectionProvider = new ConnectionProvider();
 
-        if ($runnable instanceof Runnable) {
-            $runnable->run($connectionProvider);
-        } elseif ($runnable instanceof RunnableWithDriver) {
-            if (count($arguments) < 3) {
-                throw new InvalidArgumentException(sprintf('Driver is required for example "%s"', $example));
+        for ($i = 0, $count = count($tests); $i < $count; $i++) {
+            $test = $tests[$i];
+
+            printf('[%s]' . PHP_EOL, $test->toString());
+
+            try {
+                $test->run($connectionProvider);
+            } catch (Exception $e) {
+                echo $e->getMessage() . PHP_EOL;
             }
 
-            $runnable->run($connectionProvider, $arguments[2]);
-        } else {
-            throw new InvalidArgumentException(sprintf('Example "%s" is not runnable', $example));
+            if ($i >= $count - 1) {
+                continue;
+            }
+
+            echo PHP_EOL;
         }
     }
 }

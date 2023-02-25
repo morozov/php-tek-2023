@@ -25,6 +25,6 @@
 
     <!-- See https://github.com/php/php-src/issues/10672 -->
     <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing">
-        <exclude-pattern>src/Examples/E02BlobMemoryUsage/Driver/PgSqlDriver.php</exclude-pattern>
+        <exclude-pattern>src/Leaks/L02/Driver/PgSqlDriver.php</exclude-pattern>
     </rule>
 </ruleset>
