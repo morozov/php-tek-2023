@@ -16,7 +16,8 @@ use Exception;
 use RuntimeException;
 
 use function fclose;
-use function fopen;
+use function feof;
+use function fread;
 use function fseek;
 use function fwrite;
 use function memory_get_peak_usage;
@@ -26,7 +27,7 @@ use function pcntl_waitpid;
 use function printf;
 use function random_bytes;
 use function sprintf;
-use function stream_copy_to_stream;
+use function strlen;
 use function tmpfile;
 
 use const PHP_EOL;
@@ -98,9 +99,9 @@ final class Runner
         $copied  = $driver->persistMessage($message);
 
         if ($copied !== null) {
-            printf('Copied %s to the database.' . PHP_EOL, $this->formatAsMebibytes($copied));
+            printf('Written %s to the database.' . PHP_EOL, $this->formatAsMebibytes($copied));
         } else {
-            printf('Copied some bytes to the database.' . PHP_EOL);
+            printf('Written some bytes to the database.' . PHP_EOL);
         }
 
         $this->trackAndPrintPeakMemoryUsage();
@@ -115,9 +116,9 @@ final class Runner
 
         $attachment = $driver->fetchAttachment();
 
-        $copied = $this->copyStreamToDevNull($attachment);
+        $copied = $this->countStreamBytes($attachment);
 
-        printf('Copied %s from the database.' . PHP_EOL, $this->formatAsMebibytes($copied));
+        printf('Read %s from the database.' . PHP_EOL, $this->formatAsMebibytes($copied));
         $this->trackAndPrintPeakMemoryUsage();
     }
 
@@ -162,13 +163,15 @@ final class Runner
     }
 
     /** @param resource $stream */
-    private function copyStreamToDevNull(mixed $stream): int
+    private function countStreamBytes(mixed $stream): int
     {
-        $output = fopen('/dev/null', 'w');
-        $copied = stream_copy_to_stream($stream, $output);
-        fclose($output);
+        $count = 0;
 
-        return $copied;
+        while (! feof($stream)) {
+            $count += strlen(fread($stream, 8192));
+        }
+
+        return $count;
     }
 
     private function trackAndPrintPeakMemoryUsage(): void
