@@ -13,6 +13,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Exception;
+use RuntimeException;
 
 use function fclose;
 use function fopen;
@@ -20,6 +21,8 @@ use function fseek;
 use function fwrite;
 use function memory_get_peak_usage;
 use function min;
+use function pcntl_fork;
+use function pcntl_waitpid;
 use function printf;
 use function random_bytes;
 use function sprintf;
@@ -48,18 +51,48 @@ final class Runner
         return new EntityManager($connection, $config);
     }
 
+    public function run(EntityManager $entityManager, Driver $driver): void
+    {
+        $this->forkAndWait(function () use ($entityManager, $driver): void {
+            $this->write($entityManager, $driver);
+        });
+
+        $this->forkAndWait(function () use ($driver): void {
+            $this->read($driver);
+        });
+    }
+
+    private function forkAndWait(callable $process): void
+    {
+        $pid = pcntl_fork();
+
+        if ($pid === -1) {
+            throw new RuntimeException('Failed to fork process');
+        }
+
+        if ($pid === 0) {
+            $process();
+            exit;
+        }
+
+        pcntl_waitpid($pid, $status);
+
+        if ($status !== 0) {
+            throw new RuntimeException(sprintf('Child process exited with status %d', $status));
+        }
+    }
+
     /**
      * @throws DBAL\Exception
      * @throws ORMException
      */
-    public function run(EntityManager $entityManager, Driver $driver): void
+    private function write(EntityManager $entityManager, Driver $driver): void
     {
+        printf('Starting the write part.' . PHP_EOL);
+
         $this->setUp($entityManager);
 
         $attachment = $this->createInputStream();
-        printf('Stream created.' . PHP_EOL);
-        $this->trackAndPrintPeakMemoryUsage();
-        echo PHP_EOL;
 
         $message = new Message($attachment);
         $copied  = $driver->persistMessage($message);
@@ -74,6 +107,11 @@ final class Runner
         echo PHP_EOL;
 
         fclose($attachment);
+    }
+
+    private function read(Driver $driver): void
+    {
+        printf('Starting the read part.' . PHP_EOL);
 
         $attachment = $driver->fetchAttachment();
 

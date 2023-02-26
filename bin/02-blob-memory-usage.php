@@ -19,17 +19,5 @@ require __DIR__ . '/../vendor/autoload.php';
         //new BlobMemoryUsageWithSqlSrv(),
     ];
 
-    if ($_SERVER['argc'] > 1) {
-        (new Runner())->run([$tests[$_SERVER['argv'][1]]]);
-    } else {
-        for ($i = 0, $count = count($tests); $i < $count; $i++) {
-            passthru(PHP_BINARY . ' ' . __FILE__ . ' ' . $i);
-
-            if ($i >= $count - 1) {
-                continue;
-            }
-
-            echo PHP_EOL;
-        }
-    }
+    (new Runner())->run($tests);
 })();

@@ -3,6 +3,7 @@
   "require": {
     "php": "^8.2",
     "ext-mysqli": "*",
+    "ext-pcntl": "*",
     "ext-pdo": "*",
     "ext-pgsql": "*",
     "ext-sqlsrv": "*",
