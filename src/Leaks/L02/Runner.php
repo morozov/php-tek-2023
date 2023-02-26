@@ -19,6 +19,7 @@ use function fopen;
 use function fseek;
 use function fwrite;
 use function memory_get_peak_usage;
+use function min;
 use function printf;
 use function random_bytes;
 use function sprintf;
@@ -32,6 +33,10 @@ use const PHP_EOL;
  */
 final class Runner
 {
+    private const BLOB_SIZE = 20971520;
+
+    private int $previousOverhead = 0;
+
     /** @throws MissingMappingDriverImplementation */
     public function createEntityManager(Connection $connection): EntityManager
     {
@@ -107,10 +112,10 @@ final class Runner
     {
         $fp = tmpfile();
 
-        // Generate and write 20MB of data in 8KB chunks
-        for ($i = 0; $i < 2560; $i++) {
-            $chunk = random_bytes(8192);
-            fwrite($fp, $chunk);
+        $remaining = self::BLOB_SIZE;
+
+        while ($remaining > 0) {
+            $remaining -= fwrite($fp, random_bytes(min($remaining, 8192)));
         }
 
         fseek($fp, 0);
@@ -130,10 +135,23 @@ final class Runner
 
     private function trackAndPrintPeakMemoryUsage(): void
     {
-        printf(
-            'Peak memory usage: %s.' . PHP_EOL,
-            $this->formatAsMebibytes(memory_get_peak_usage()),
-        );
+        $peakMemoryUsage = memory_get_peak_usage();
+
+        $overhead = (int) ($peakMemoryUsage / self::BLOB_SIZE);
+
+        $increment = $overhead - $this->previousOverhead;
+
+        $this->previousOverhead = $overhead;
+
+        if ($increment > 0) {
+            printf(
+                'Peak memory usage has increased by %dx the blob size (%s).' . PHP_EOL,
+                $increment,
+                $this->formatAsMebibytes($peakMemoryUsage),
+            );
+        } else {
+            echo 'Peak memory usage has not increased.' . PHP_EOL;
+        }
     }
 
     private function formatAsMebibytes(int $value): string
