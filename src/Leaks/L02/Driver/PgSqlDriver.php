@@ -56,7 +56,7 @@ final readonly class PgSqlDriver implements Driver
         pg_lo_close($lo);
 
         // Prepare the insert statement
-        $sql  = "INSERT INTO messages (id, attachment) VALUES (nextval('messages_id_seq'), \$1)";
+        $sql  = 'INSERT INTO messages (attachment) VALUES ($1)';
         $stmt = pg_prepare($this->connection, 'insert_blob', $sql);
 
         // Execute the prepared statement with a parameter for the large object OID

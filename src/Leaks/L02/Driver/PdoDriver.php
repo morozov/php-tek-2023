@@ -10,7 +10,7 @@ use PDO;
 
 use function tmpfile;
 
-final readonly class PdoPgSqlDriver implements Driver
+final readonly class PdoDriver implements Driver
 {
     public function __construct(private PDO $connection)
     {
@@ -19,7 +19,7 @@ final readonly class PdoPgSqlDriver implements Driver
     public function persistMessage(Message $message): null
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO messages (id, attachment) VALUES (nextval(\'messages_id_seq\'), ?)',
+            'INSERT INTO messages (attachment) VALUES (?)',
         );
 
         $stmt->bindValue(1, $message->attachment, PDO::PARAM_LOB);

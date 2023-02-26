@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 readonly class Message
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
     public int $id;
 

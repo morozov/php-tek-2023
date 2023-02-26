@@ -7,7 +7,7 @@ namespace Morozov\PhpTek2023\Leaks\L02;
 use Doctrine\DBAL;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
-use Morozov\PhpTek2023\Leaks\L02\Driver\PdoPgSqlDriver;
+use Morozov\PhpTek2023\Leaks\L02\Driver\PdoDriver;
 use Morozov\PhpTek2023\Test;
 use PDO;
 
@@ -35,6 +35,6 @@ final class BlobMemoryUsageWithPdoPgSql implements Test
         $nativeConnection = $connection->getNativeConnection();
         assert($nativeConnection instanceof PDO);
 
-        $runner->run($entityManager, new PdoPgSqlDriver($nativeConnection));
+        $runner->run($entityManager, new PdoDriver($nativeConnection));
     }
 }
