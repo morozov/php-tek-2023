@@ -8,8 +8,6 @@ use Morozov\PhpTek2023\Leaks\L02\Driver;
 use Morozov\PhpTek2023\Leaks\L02\Message;
 use PDO;
 
-use function tmpfile;
-
 final readonly class PdoDriver implements Driver
 {
     public function __construct(private PDO $connection)
@@ -30,6 +28,16 @@ final readonly class PdoDriver implements Driver
 
     public function fetchAttachment(): mixed
     {
-        return tmpfile();
+        $this->connection->beginTransaction();
+
+        $stmt = $this->connection->prepare(
+            'SELECT attachment FROM messages WHERE id = 1',
+        );
+
+        $stmt->execute();
+        $stmt->bindColumn(1, $attachment, PDO::PARAM_LOB);
+        $stmt->fetch();
+
+        return $attachment;
     }
 }

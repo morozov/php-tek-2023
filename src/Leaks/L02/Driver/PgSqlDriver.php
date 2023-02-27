@@ -7,7 +7,9 @@ use Morozov\PhpTek2023\Leaks\L02\Message;
 use PgSql\Connection;
 
 use function fread;
+use function fwrite;
 use function pg_execute;
+use function pg_fetch_row;
 use function pg_free_result;
 use function pg_last_error;
 use function pg_lo_close;
@@ -80,6 +82,15 @@ final readonly class PgSqlDriver implements Driver
 
     public function fetchAttachment(): mixed
     {
-        return tmpfile();
+        // Query the BLOB data
+        $result = pg_query($this->connection, 'SELECT attachment FROM messages WHERE id = 1');
+
+        // Fetch the result row
+        $row = pg_fetch_row($result);
+
+        $tmp = tmpfile();
+        fwrite($tmp, $row[0]);
+
+        return $tmp;
     }
 }

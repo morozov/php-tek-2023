@@ -12,12 +12,17 @@ use Morozov\PhpTek2023\Test;
 use PDO;
 
 use function assert;
+use function sprintf;
 
-final class BlobMemoryUsageWithPdoPgSql implements Test
+final readonly class BlobMemoryUsageWithPdo implements Test
 {
+    public function __construct(private string $driver)
+    {
+    }
+
     public function toString(): string
     {
-        return 'Blob memory usage with pdo_pgsql used directly';
+        return sprintf('Blob memory usage with %s used directly', $this->driver);
     }
 
     /**
@@ -26,7 +31,7 @@ final class BlobMemoryUsageWithPdoPgSql implements Test
      */
     public function run(ConnectionProvider $connectionProvider): void
     {
-        $connection = $connectionProvider->getConnection('pdo_pgsql');
+        $connection = $connectionProvider->getConnection($this->driver);
 
         $runner = new Runner();
 
