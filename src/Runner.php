@@ -11,7 +11,7 @@ use function printf;
 
 use const PHP_EOL;
 
-final class Runner
+final readonly class Runner
 {
     /** @param list<Test> $tests */
     public function run(array $tests): void

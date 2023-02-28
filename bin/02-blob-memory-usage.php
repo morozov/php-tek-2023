@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Morozov\PhpTek2023\Leaks\L02\BlobMemoryUsageWithDbal;
 use Morozov\PhpTek2023\Leaks\L02\BlobMemoryUsageWithOrm;
 use Morozov\PhpTek2023\Leaks\L02\BlobMemoryUsageWithPdo;
 use Morozov\PhpTek2023\Leaks\L02\BlobMemoryUsageWithPgSql;
@@ -14,8 +15,14 @@ require __DIR__ . '/../vendor/autoload.php';
     $tests = [
         // ORM
         new BlobMemoryUsageWithOrm('mysqli'),
-        new BlobMemoryUsageWithOrm('pdo_pgsql'),
         new BlobMemoryUsageWithOrm('pdo_mysql'),
+        new BlobMemoryUsageWithOrm('pdo_pgsql'),
+
+        // DBAL
+        new BlobMemoryUsageWithDbal('mysqli'),
+        new BlobMemoryUsageWithDbal('pdo_mysql'),
+        new BlobMemoryUsageWithDbal('pgsql'),
+        new BlobMemoryUsageWithDbal('pdo_pgsql'),
 
         // PDO extensions used directly
         new BlobMemoryUsageWithPdo('pdo_mysql'),

@@ -13,7 +13,7 @@ use Morozov\PhpTek2023\Test;
 use function assert;
 use function is_resource;
 
-final class BlobMemoryUsageWithSqlSrv implements Test
+final readonly class BlobMemoryUsageWithSqlSrv implements Test
 {
     public function toString(): string
     {

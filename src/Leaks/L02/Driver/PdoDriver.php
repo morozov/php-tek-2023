@@ -20,7 +20,13 @@ final readonly class PdoDriver implements Driver
             'INSERT INTO messages (attachment) VALUES (?)',
         );
 
-        $stmt->bindValue(1, $message->attachment, PDO::PARAM_LOB);
+        if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlsrv') {
+            $attachment = $message->attachment;
+            $stmt->bindParam(1, $attachment, PDO::PARAM_LOB, 0, PDO::SQLSRV_ENCODING_BINARY);
+        } else {
+            $stmt->bindValue(1, $message->attachment, PDO::PARAM_LOB);
+        }
+
         $stmt->execute();
 
         return null;
@@ -35,8 +41,13 @@ final readonly class PdoDriver implements Driver
         );
 
         $stmt->execute();
-        $stmt->bindColumn(1, $attachment, PDO::PARAM_LOB);
-        $stmt->fetch();
+
+        if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql') {
+            // the default works as well, but it uses twice as much memory
+            $attachment = $stmt->fetchColumn();
+        } else {
+            $stmt->bindColumn(1, $attachment, PDO::PARAM_LOB);
+        }
 
         return $attachment;
     }

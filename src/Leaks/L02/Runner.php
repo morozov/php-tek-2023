@@ -130,7 +130,10 @@ final class Runner
     {
         $connection = $entityManager->getConnection();
 
-        $connection->executeStatement('DROP TABLE IF EXISTS messages');
+        try {
+            $connection->executeStatement('DROP TABLE messages');
+        } catch (DBAL\Exception) {
+        }
 
         if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
             $connection->executeStatement('DROP SEQUENCE IF EXISTS messages_id_seq');

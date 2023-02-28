@@ -13,7 +13,7 @@ use PgSql\Connection;
 
 use function assert;
 
-final class BlobMemoryUsageWithPgSql implements Test
+final readonly class BlobMemoryUsageWithPgSql implements Test
 {
     public function toString(): string
     {

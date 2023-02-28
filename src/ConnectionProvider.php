@@ -12,7 +12,7 @@ use InvalidArgumentException;
 use function array_keys;
 use function sprintf;
 
-final class ConnectionProvider
+final readonly class ConnectionProvider
 {
     private const PARAMETERS = [
         'mysqli' => [
