@@ -6,6 +6,7 @@ namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\MissingMappingDriverImplementation;
@@ -137,6 +138,11 @@ final class Runner
 
         if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
             $connection->executeStatement('DROP SEQUENCE IF EXISTS messages_id_seq');
+        } elseif ($connection->getDatabasePlatform() instanceof OraclePlatform) {
+            try {
+                $connection->executeStatement('DROP SEQUENCE MESSAGES_SEQ');
+            } catch (DBAL\Exception) {
+            }
         }
 
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
