@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Morozov\PhpTek2023\Leaks\L05\DefaultValue;
-use Morozov\PhpTek2023\Leaks\L05\SqlProvider\CurrentDateSqlProvider;
-use Morozov\PhpTek2023\Leaks\L05\SqlProvider\CurrentTimestampSqlProvider;
-use Morozov\PhpTek2023\Leaks\L05\SqlProvider\StaticSqlProvider;
+use Morozov\PhpTek2023\Leaks\L04\DefaultValue;
+use Morozov\PhpTek2023\Leaks\L04\SqlProvider\CurrentDateSqlProvider;
+use Morozov\PhpTek2023\Leaks\L04\SqlProvider\CurrentTimestampSqlProvider;
+use Morozov\PhpTek2023\Leaks\L04\SqlProvider\StaticSqlProvider;
 use Morozov\PhpTek2023\Runner;
 
 require __DIR__ . '/../vendor/autoload.php';
