@@ -9,4 +9,5 @@ require __DIR__ . '/../vendor/autoload.php';
 
 (new Runner())->run([
     new ReservedKeywords('mysqli'),
+    new ReservedKeywords('pgsql'),
 ]);

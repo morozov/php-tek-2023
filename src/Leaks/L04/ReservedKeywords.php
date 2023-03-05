@@ -34,14 +34,15 @@ final readonly class ReservedKeywords implements Test
         $this->setUp($connection);
 
         $result = $connection->createQueryBuilder()
-            ->update('rules')
-            ->set('ignore', '?')
-            ->where('id = ?')
+            ->select('name')
+            ->from('rules')
+            ->where('ignore = ?')
             ->setParameter(0, true)
-            ->setParameter(1, 1)
-            ->executeStatement();
+            ->executeQuery();
 
-        printf('Updated %d row(s)' . PHP_EOL, $result);
+        foreach ($result->iterateColumn() as $name) {
+            printf('Name: %s' . PHP_EOL, $name);
+        }
     }
 
     /** @throws Exception */
@@ -49,11 +50,12 @@ final readonly class ReservedKeywords implements Test
     {
         $table = new Table('rules');
         $table->addColumn('id', 'integer');
+        $table->addColumn('name', 'string', ['length' => 24]);
         $table->addColumn('ignore', 'boolean');
 
         $connection->createSchemaManager()
             ->dropAndCreateTable($table);
 
-        $connection->insert('rules', ['id' => 1, 'ignore' => false]);
+        $connection->insert('rules', ['id' => 1, 'name' => 'Ignore me', 'ignore' => true]);
     }
 }
