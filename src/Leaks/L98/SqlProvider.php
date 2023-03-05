@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Morozov\PhpTek2023\Leaks\L04;
+namespace Morozov\PhpTek2023\Leaks\L98;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 

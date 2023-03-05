@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Morozov\PhpTek2023\Leaks\L05;
+namespace Morozov\PhpTek2023\Leaks\L04;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
