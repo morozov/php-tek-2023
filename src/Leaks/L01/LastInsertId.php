@@ -39,7 +39,7 @@ final readonly class LastInsertId implements Test
         $connection1->insert('ai', ['name' => 'test']);
         $connection2->insert('ai', ['name' => 'test']);
 
-        if (! $platform->supportsIdentityColumns()) {
+        if ($platform->usesSequenceEmulatedIdentityColumns()) {
             $seqName = $platform->getIdentitySequenceName('ai', 'id');
 
             $id1 = $connection1->lastInsertId($seqName);

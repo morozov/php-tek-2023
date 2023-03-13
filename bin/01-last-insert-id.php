@@ -9,7 +9,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 (new Runner())->run([
     new LastInsertId('mysqli'),
-    new LastInsertId('pdo_pgsql'),
+    new LastInsertId('pgsql'),
+    new LastInsertId('sqlsrv'),
     new LastInsertId('oci8'),
-    new LastInsertId('pdo_oci'),
 ]);
