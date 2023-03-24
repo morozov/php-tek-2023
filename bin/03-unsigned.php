@@ -12,5 +12,5 @@ require __DIR__ . '/../vendor/autoload.php';
 (new Runner())->run([
     new Unsigned('pdo_mysql', new DefaultConverter()),
     new Unsigned('pdo_pgsql', new DefaultConverter()),
-    new Unsigned('pdo_pgsql', new SignedConverter()),
+    new Unsigned('pdo_pgsql', new SignedConverter(new DefaultConverter())),
 ]);
