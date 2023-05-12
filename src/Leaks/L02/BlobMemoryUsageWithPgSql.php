@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
 use Morozov\PhpTek2023\Leaks\L02\Driver\PgSqlDriver;
@@ -32,9 +33,12 @@ final readonly class BlobMemoryUsageWithPgSql implements Test
 
         $entityManager = $runner->createEntityManager($connection);
 
-        $nativeConnection = $connection->getNativeConnection();
-        assert($nativeConnection instanceof Connection);
+        $runner->run($entityManager, static function (EntityManager $entityManager): Driver {
+            $connection = $entityManager->getConnection()
+                ->getNativeConnection();
+            assert($connection instanceof Connection);
 
-        $runner->run($entityManager, new PgSqlDriver($nativeConnection));
+            return new PgSqlDriver($connection);
+        });
     }
 }

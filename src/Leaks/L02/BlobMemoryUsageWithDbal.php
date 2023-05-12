@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
 use Morozov\PhpTek2023\Leaks\L02\Driver\DbalDriver;
@@ -23,7 +24,7 @@ final readonly class BlobMemoryUsageWithDbal implements Test
 
     public function toString(): string
     {
-        return sprintf('Blob memory usage DBAL and %s', $this->driver);
+        return sprintf('Blob memory usage with DBAL and %s', $this->driver);
     }
 
     /**
@@ -38,6 +39,8 @@ final readonly class BlobMemoryUsageWithDbal implements Test
 
         $entityManager = $runner->createEntityManager($connection);
 
-        $runner->run($entityManager, new DbalDriver($connection));
+        $runner->run($entityManager, static function (EntityManager $entityManager): Driver {
+            return new DbalDriver($entityManager->getConnection());
+        });
     }
 }

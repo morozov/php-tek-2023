@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
 use Morozov\PhpTek2023\Leaks\L02\Driver\Oci8Driver;
@@ -32,9 +33,12 @@ final readonly class BlobMemoryUsageWithOci8 implements Test
 
         $entityManager = $runner->createEntityManager($connection);
 
-        $nativeConnection = $connection->getNativeConnection();
-        assert(is_resource($nativeConnection));
+        $runner->run($entityManager, static function (EntityManager $entityManager): Driver {
+            $connection = $entityManager->getConnection()
+                ->getNativeConnection();
+            assert(is_resource($connection));
 
-        $runner->run($entityManager, new Oci8Driver($nativeConnection));
+            return new Oci8Driver($connection);
+        });
     }
 }

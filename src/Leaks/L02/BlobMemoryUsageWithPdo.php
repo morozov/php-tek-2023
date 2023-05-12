@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
 use Morozov\PhpTek2023\Leaks\L02\Driver\PdoDriver;
@@ -37,9 +38,12 @@ final readonly class BlobMemoryUsageWithPdo implements Test
 
         $entityManager = $runner->createEntityManager($connection);
 
-        $nativeConnection = $connection->getNativeConnection();
-        assert($nativeConnection instanceof PDO);
+        $runner->run($entityManager, static function (EntityManager $entityManager): Driver {
+            $connection = $entityManager->getConnection()
+                ->getNativeConnection();
+            assert($connection instanceof PDO);
 
-        $runner->run($entityManager, new PdoDriver($nativeConnection));
+            return new PdoDriver($connection);
+        });
     }
 }

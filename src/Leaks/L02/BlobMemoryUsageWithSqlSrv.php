@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
 use Morozov\PhpTek2023\Leaks\L02\Driver\SqlSrvDriver;
@@ -32,9 +33,12 @@ final readonly class BlobMemoryUsageWithSqlSrv implements Test
 
         $entityManager = $runner->createEntityManager($connection);
 
-        $nativeConnection = $connection->getNativeConnection();
-        assert(is_resource($nativeConnection));
+        $runner->run($entityManager, static function (EntityManager $entityManager): Driver {
+            $connection = $entityManager->getConnection()
+                ->getNativeConnection();
+            assert(is_resource($connection));
 
-        $runner->run($entityManager, new SqlSrvDriver($nativeConnection));
+            return new SqlSrvDriver($connection);
+        });
     }
 }

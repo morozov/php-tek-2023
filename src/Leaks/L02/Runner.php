@@ -53,14 +53,17 @@ final class Runner
         return new EntityManager($connection, $config);
     }
 
-    public function run(EntityManager $entityManager, Driver $driver): void
+    public function run(EntityManager $entityManager, callable $driverFactory): void
     {
-        $this->forkAndWait(function () use ($entityManager, $driver): void {
-            $this->write($entityManager, $driver);
+        $this->forkAndWait(function () use ($entityManager, $driverFactory): void {
+            $this->write($entityManager, $driverFactory($entityManager));
         });
 
-        $this->forkAndWait(function () use ($driver): void {
-            $this->read($driver);
+        $entityManager->getConnection()
+            ->close();
+
+        $this->forkAndWait(function () use ($entityManager, $driverFactory): void {
+            $this->read($driverFactory($entityManager));
         });
     }
 

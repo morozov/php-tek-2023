@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Morozov\PhpTek2023\Leaks\L02;
 
 use Doctrine\DBAL;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Morozov\PhpTek2023\ConnectionProvider;
 use Morozov\PhpTek2023\Leaks\L02\Driver\OrmDriver;
@@ -38,6 +39,8 @@ final readonly class BlobMemoryUsageWithOrm implements Test
 
         $entityManager = $runner->createEntityManager($connection);
 
-        $runner->run($entityManager, new OrmDriver($entityManager));
+        $runner->run($entityManager, static function (EntityManager $entityManager): Driver {
+            return new OrmDriver($entityManager);
+        });
     }
 }
